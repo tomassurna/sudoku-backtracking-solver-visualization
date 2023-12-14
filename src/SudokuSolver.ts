@@ -1,7 +1,9 @@
 import { Sudoku } from './Sudoku';
 import { cloneDeep } from 'lodash';
 import { store } from './app/Store';
-import { setSudoku } from './actions/SudokuSlice';
+import { incrementCount, setSudoku } from './actions/SudokuSlice';
+
+let counter = 0;
 
 /**
  * 1. For all empty cells compute possible values. These are values that are not present in the row, column or section.
@@ -11,8 +13,10 @@ import { setSudoku } from './actions/SudokuSlice';
  * 4. For all cells that have more than one possible value, try each possible value and go back to step 1.
  * @param sudoku
  */
-export async function solveSudokuSmarter(sudoku: Sudoku): Promise<Sudoku | undefined> {
-  store.dispatch(setSudoku(cloneDeep(sudoku)));
+export async function solveSudoku(sudoku: Sudoku): Promise<Sudoku | undefined> {
+  store.dispatch(setSudoku(cloneDeep(sudoku)), incrementCount());
+  store.dispatch(incrementCount());
+  console.log(counter++);
   await new Promise(f => setTimeout(f, 100));
 
   const cells = sudoku.rows.flatMap(row => row.sections.flatMap(section => section.cells));
@@ -50,7 +54,6 @@ export async function solveSudokuSmarter(sudoku: Sudoku): Promise<Sudoku | undef
   }
 
   if (isSolved(sudoku)) {
-    store.dispatch(setSudoku(cloneDeep(sudoku)));
     return sudoku;
   }
 
@@ -58,47 +61,31 @@ export async function solveSudokuSmarter(sudoku: Sudoku): Promise<Sudoku | undef
   // 2. Set value of cell to first possible value
   // 3. Confirm sudoku is valid
   // 4. If valid step into next recursion
-  for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
-    const row = sudoku.rows[rowIndex];
+  for (const cell of cells.filter(cell => !cell.value)) {
+    let valueSet = false;
 
-    for (let sectionIndex = 0; sectionIndex < 3; sectionIndex++) {
-      const section = row.sections[sectionIndex];
+    for (let value of cell.possibleValues ?? []) {
+      cell.value = value;
 
-      for (let cellIndex = 0; cellIndex < 9; cellIndex++) {
-        const cell = section.cells[cellIndex];
-
-        if (cell.value) {
-          continue;
-        }
-
-        let valueSet = false;
-
-        for (let value of cell.possibleValues ?? []) {
-          cell.value = value;
-
-          if (!isValid(sudoku)) {
-            cell.value = undefined;
-            continue;
-          }
-          valueSet = true;
-
-          const result = await solveSudokuSmarter(sudoku);
-
-          if (result !== undefined && isSolved(result)) {
-            store.dispatch(setSudoku(cloneDeep(sudoku)));
-            return result;
-          }
-
-          cell.value = undefined;
-          valueSet = false;
-        }
-
-        // If no value was set then the section is incomplete and can be exited early
-        if (!valueSet) {
-          emptyCells.forEach(cell => (cell.value = undefined));
-          return undefined;
-        }
+      if (!isValid(sudoku)) {
+        cell.value = undefined;
+        continue;
       }
+      valueSet = true;
+
+      const result = await solveSudoku(sudoku);
+
+      if (result !== undefined && isSolved(result)) {
+        return result;
+      }
+
+      cell.value = undefined;
+      valueSet = false;
+    }
+
+    // If no value was set then the section is incomplete and can be exited early
+    if (!valueSet) {
+      break;
     }
   }
 

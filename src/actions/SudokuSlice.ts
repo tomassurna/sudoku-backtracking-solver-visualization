@@ -5,10 +5,12 @@ import { EmptySudokuExample } from '../SudokuConstants';
 
 export interface SudokuState {
   sudoku: Sudoku | undefined;
+  counter: number;
 }
 
 const initialState: SudokuState = {
   sudoku: EmptySudokuExample,
+  counter: 0,
 };
 
 export const sudokuSlice = createSlice({
@@ -21,11 +23,15 @@ export const sudokuSlice = createSlice({
         sudoku: action.payload,
       };
     },
+    incrementCount: state => {
+      state.counter++;
+      return;
+    },
   },
 });
 
-export const { setSudoku } = sudokuSlice.actions;
+export const { setSudoku, incrementCount } = sudokuSlice.actions;
 
-export const selectSudoku = (state: RootState) => state.sudoku;
+export const selectSudokuState = (state: RootState) => state.sudoku;
 
 export default sudokuSlice.reducer;

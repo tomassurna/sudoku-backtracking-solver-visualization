@@ -4,6 +4,7 @@ import { sudokuSlice } from '../actions/SudokuSlice';
 export const store = configureStore({
   reducer: {
     sudoku: sudokuSlice.reducer,
+    counter: sudokuSlice.reducer,
   },
 });
 
