@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { sudokuSlice } from '../actions/sudokuSlice';
+import { sudokuSlice } from '../actions/SudokuSlice';
 
 export const store = configureStore({
   reducer: {

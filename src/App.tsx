@@ -4,8 +4,8 @@ import { Box } from '@mui/material';
 import { Sudoku } from './Sudoku';
 import { EmptySudokuExample, SudokuExample, SudokuExampleSolved } from './SudokuExample';
 import { solveSudokuSmarter } from './SudokuSolver';
-import { selectSudoku } from './actions/sudokuSlice';
-import { useAppSelector } from './app/hooks';
+import { selectSudoku } from './actions/SudokuSlice';
+import { useAppSelector } from './app/Hooks';
 import { cloneDeep } from 'lodash';
 
 function App() {

@@ -1,6 +1,6 @@
 import { Sudoku } from './Sudoku';
-import { useAppDispatch } from './app/hooks';
-import { setSudoku } from './actions/sudokuSlice';
+import { useAppDispatch } from './app/Hooks';
+import { setSudoku } from './actions/SudokuSlice';
 import { useEffect } from 'react';
 
 const SudokuSolver = ({ toSolve }: { toSolve: Sudoku }) => {

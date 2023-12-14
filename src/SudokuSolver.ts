@@ -1,7 +1,7 @@
 import { Sudoku, SudokuRow, SudokuSection } from './Sudoku';
 import { cloneDeep } from 'lodash';
-import { store } from './app/store';
-import { setSudoku } from './actions/sudokuSlice';
+import { store } from './app/Store';
+import { setSudoku } from './actions/SudokuSlice';
 
 type Indexes = {
   rowIndex: number;
