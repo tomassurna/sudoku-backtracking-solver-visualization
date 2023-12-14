@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { RootState } from '../app/Store';
 import { Sudoku } from '../Sudoku';
-import { EmptySudokuExample } from '../SudokuExample';
+import { EmptySudokuExample } from '../SudokuConstants';
 
 export interface SudokuState {
   sudoku: Sudoku | undefined;

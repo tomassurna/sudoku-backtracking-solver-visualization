@@ -2,38 +2,25 @@ import React, { useEffect } from 'react';
 import './App.css';
 import { Box } from '@mui/material';
 import { Sudoku } from './Sudoku';
-import { EmptySudokuExample, SudokuExample, SudokuExampleSolved } from './SudokuExample';
+import { EmptySudokuExample, SudokuExample, SudokuExampleSolved } from './SudokuConstants';
 import { solveSudokuSmarter } from './SudokuSolver';
-import { selectSudoku } from './actions/SudokuSlice';
+import { selectSudoku, setSudoku } from './actions/SudokuSlice';
 import { useAppSelector } from './app/Hooks';
 import { cloneDeep } from 'lodash';
+import { store } from './app/Store';
 
 function App() {
   const sudokuState = useAppSelector(selectSudoku);
 
   useEffect(() => {
-    // console.log({
-    //   sudoku: SudokuExample,
-    //   isValid: isValid(SudokuExample),
-    //   isSolved: isSolved(SudokuExample),
-    // });
-
-    // console.log({ solved: solveSudokuSmarter(cloneDeep(SudokuExample)) });
-    // console.log({
-    //   sections: buildAllPossibleSections(cloneDeep(SudokuExample.rows[0].sections[0])),
-    // });
-
     solveSudokuSmarter(cloneDeep(SudokuExample)).then(solved => {
-      console.log(solved);
+      store.dispatch(setSudoku(cloneDeep(solved)));
     });
   }, []);
 
   return (
     <Box>
       <Sudoku sudoku={sudokuState.sudoku ?? EmptySudokuExample} />
-      <Sudoku sudoku={SudokuExample} />
-      <Sudoku sudoku={SudokuExampleSolved} />
-      {/*<Box sx={{ padding: 10 }}>{isValid(SudokuExampleSolved) ? 'valid' : 'invalid'}</Box>*/}
     </Box>
   );
 }
